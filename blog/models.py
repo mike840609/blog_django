@@ -26,10 +26,14 @@ class Post(models.Model):
     body = models.TextField()
     created_time = models.DateTimeField()
     modified_time = models.DateTimeField()
-    excerpt = models.CharField(max_length=200, blank=True)
+    # excerpt = models.CharField(max_length=200, blank=True)
     category = models.ForeignKey(Category)
     tags = models.ManyToManyField(Tag, blank=True)
     author = models.ForeignKey(User)
+
+    
+
+
 
     def __str__(self):
         return self.title
@@ -49,8 +53,9 @@ class Post(models.Model):
     def increase_views(self):
         self.views += 1 
         self.save(update_fields=['views'])
-        
-        
+
+
+
 
     
 
