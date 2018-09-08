@@ -20,12 +20,14 @@ def index(request):
 
 def detail(request , pk):
     post = get_object_or_404(Post, pk = pk)
-
-    post.body = markdown.markdown(post.body, extensions = [
-        'markdown.extensions.extra',
-        'markdown.extensions.codehilite',
-        'markdown.extensions.toc',
-    ] )
+    
+    # issue=======================================================
+    # post.body = markdown.markdown(post.body, extensions = [
+    #     'markdown.extensions.extra',
+    #     'markdown.extensions.codehilite',
+    #     'markdown.extensions.toc',
+    # ] )
+    # ============================================================
 
     form = CommentForm()
     comment_list = post.comment_set.all()
