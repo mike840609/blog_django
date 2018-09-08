@@ -20,7 +20,7 @@ def index(request):
 
 def detail(request , pk):
     post = get_object_or_404(Post, pk = pk)
-    
+
     # issue=======================================================
     # post.body = markdown.markdown(post.body, extensions = [
     #     'markdown.extensions.extra',
@@ -28,6 +28,10 @@ def detail(request , pk):
     #     'markdown.extensions.toc',
     # ] )
     # ============================================================
+
+    # 閱讀人數  +1
+    post.increase_views()
+
 
     form = CommentForm()
     comment_list = post.comment_set.all()
