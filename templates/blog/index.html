@@ -30,8 +30,26 @@
                     <div class="no-post">暫時還沒有發布文章</div>
                     {% endfor %}
 
+                    <!-- 簡單分頁效果 -->
+                    {%if is_paginated%}
+                    <div class="pagination-simple">
 
+                        <!-- 上ㄧ頁 -->
+                        {% if page_obj.has_previous %}
+                            <a href="?page={{page_obj.previous_page_number}}">上一页</a>
+                        {% endif %}
+                        
+                        <!-- 當前頁面 -->
+                        <span class="current">　第 {{page_obj.number}} 頁　/　共 {{paginator.num_pages}} 頁　</span>    
 
+                        <!-- 下ㄧ頁 -->
+                        {% if page_obj.has_next %}
+                            <a href="?page={{page_obj.next_page_number}}">下一页</a>
+                        {% endif %}
+
+                    </div>
+                    {% endif %}
+                
 
                     <!-- 简单分页效果
                 <div class="pagination-simple">
@@ -40,7 +58,7 @@
                     <a href="#">下一页</a>
                 </div>
                 -->
-                    <div class="pagination">
+                    <!-- <div class="pagination">
                         <ul>
                             <li>
                                 <a href="">1</a>
@@ -70,6 +88,6 @@
                                 <a href="">11</a>
                             </li>
                         </ul>
-                    </div>
+                    </div> -->
 {% endblock main %}
                 

@@ -21,6 +21,9 @@ class IndexView(ListView):
     model = Post
     template_name = 'blog/index.html'
     context_object_name = 'post_list'
+    
+    # 指定開啟　pagnate　功能，每一頁文章數目，自動分頁
+    paginate_by = 5
 
 def index(request):
     post_list = Post.objects.all().order_by('-created_time')
@@ -50,11 +53,17 @@ class CategoryView(IndexView):
 #     return render(request,'blog/index.html',context={'post_list':post_list})
 
 # ===============================================================================
+'''
+你可以简单地把 get 方法看成是 detail 视图函数，
+至于其它的像 get_object、get_context_data 都是辅助方法，
+这些方法最终在 get 方法中被调用
+'''
 class PostDetailView(DetailView):
     model = Post
     template_name = 'blog/detail.html'
     context_object_name = 'post'
 
+    
     def get(self , request , *args , **kwargs):
         # 覆写 get 方法的目的是因为每当文章被访问一次，就得将文章阅读量 +1
         # get 方法返回的是一个 HttpResponse 实例
