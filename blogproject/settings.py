@@ -26,7 +26,7 @@ SECRET_KEY = '$pzqk5=farz41bt9pm(dv6-wtqc(!u8f5x^*gj*&6+ep5zwje%'
 DEBUG = True
 # DEBUG = False
 
-ALLOWED_HOSTS = ['192.168.168.17']
+# ALLOWED_HOSTS = ['192.168.168.17']
 
 
 # Application definition
