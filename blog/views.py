@@ -61,7 +61,10 @@ class IndexView(ListView):
         page_number = page.number
         total_pages = paginator.num_pages
         page_range = paginator.page_range
-
+        
+        #　擷取頁碼 range(7,10) -> 8,9,10    
+        # left -> range(page -3 , page) 　[current 左邊兩頁]
+        # right -> range(page , page+2 )  [current 右邊邊兩頁] 
         left = page_range[(page_number - 3 ) if (page_number - 3 ) > 0 else 0:
                           (page_number - 1 ) if (page_number - 1 ) > 0 else 0]
 
@@ -78,6 +81,7 @@ class IndexView(ListView):
                 first = True
             if left[0] > 2 : 
                 left_has_more = True
+        
         data = {
             'left' : left,
             'right' : right,
