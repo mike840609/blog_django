@@ -23,7 +23,73 @@ class IndexView(ListView):
     context_object_name = 'post_list'
     
     # 指定開啟　pagnate　功能，每一頁文章數目，自動分頁
-    paginate_by = 5
+    paginate_by = 3
+
+    def get_context_data(self, **kwargs):
+        '''
+        在视图函数中将模板变量传递给模板是通过给 render 函数的 context 参数传递一个字典实现的，
+        例如 render(request, 'blog/index.html', context={'post_list': post_list})，
+        这里传递了一个 {'post_list': post_list} 字典给模板。
+        在类视图中，这个需要传递的模板变量字典是通过 get_context_data 获得的，
+        所以我们覆寫父類別方法，以便我们能够自己再插入一些我们自定义的模板变量进去。
+        '''
+        context = super().get_context_data(**kwargs)
+
+        # 父類別物件取得
+        paginator = context.get('paginator')
+        page = context.get('page_obj')
+        is_paginated = context.get('is_paginated')
+
+        # 調用自己寫的　function　更新物件內容
+        pagination_data = self.pagination_data(paginator , page , is_paginated)
+
+        # 更新context　，pagination_data　也是字典
+        context.update(pagination_data)
+
+        # context 為已經更新的字典，而字典中已經有顯示分頁導航條所需的數據
+        return context
+
+    
+    def pagination_data(self, paginator, page, is_paginated):
+        if not is_paginated:
+            return {}
+        
+        left_has_more = False
+        right_has_more = False
+        first = False
+        last = False
+        page_number = page.number
+        total_pages = paginator.num_pages
+        page_range = paginator.page_range
+
+        left = page_range[(page_number - 3 ) if (page_number - 3 ) > 0 else 0:
+                          (page_number - 1 ) if (page_number - 1 ) > 0 else 0]
+
+        right = page_range[page_number : page_number + 2 ]
+
+        # 若 right 串列中有值
+        if right:
+            if right[-1] < total_pages:
+                last = True
+            if right[-1] < total_pages -1 :
+                right_has_more = True
+        if left:
+            if left[0] > 1 :
+                first = True
+            if left[0] > 2 : 
+                left_has_more = True
+        data = {
+            'left' : left,
+            'right' : right,
+            'left_has_more' : left_has_more,
+            'right_has_more' : right_has_more,
+            'first' : first,
+            'last':last,
+        }
+
+        return data
+        
+
 
 def index(request):
     post_list = Post.objects.all().order_by('-created_time')
