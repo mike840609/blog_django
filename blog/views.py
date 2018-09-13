@@ -103,8 +103,11 @@ def index(request):
 # 直接繼承IndexView(ListView 父類別 ),省去 model , template_name
 class CategoryView(IndexView):
     def get_queryset(self):
+        # print('category pk :{}'.format(self.kwargs))
         cate = get_object_or_404(Category, pk=self.kwargs.get('pk'))
         return super(CategoryView, self).get_queryset().filter(category=cate)
+
+        
 
 
 # class CategoryView(ListView):

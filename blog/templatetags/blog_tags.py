@@ -1,5 +1,6 @@
 from django import template
 from ..models import Post ,Category
+from django.db.models.aggregates import Count
 
 register = template.Library()
 
@@ -14,7 +15,12 @@ def get_recent_posts(num=5):
 
 @register.simple_tag
 def get_categories():
-    return Category.objects.all()
+    # from django.db.models.aggregates import Count
+    # Count 函數計算分類下的文章數，其接受的參數為需要計數的模型名稱
+    
+    return Category.objects.annotate(num_posts=Count('post')).filter(num_posts__gt=0)
+    # return Category.objects.all()
+    
 
 
 
