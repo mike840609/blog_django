@@ -23,7 +23,7 @@ class IndexView(ListView):
     context_object_name = 'post_list'
     
     # 指定開啟　pagnate　功能，每一頁文章數目，自動分頁
-    paginate_by = 3
+    paginate_by = 2
 
     def get_context_data(self, **kwargs):
         '''
@@ -54,34 +54,55 @@ class IndexView(ListView):
         if not is_paginated:
             return {}
         
-        left_has_more = False
-        right_has_more = False
-        first = False
-        last = False
+        # 当前页左边连续的页码号，初始值为空
+        left , right = [] , [] 
+
+        # 标示第 1 ,最後一页页碼後是否需要显示省略号
+        # 标示最後一頁 頁碼前是否需要显示省略号
+        left_has_more, right_has_more = False , False
+        
+        # 标示是否需要显示第 1 ,最後頁页的页码号。
+        first , last = False , False
+         
         page_number = page.number
         total_pages = paginator.num_pages
+        
         page_range = paginator.page_range
         
-        #　擷取頁碼 range(7,10) -> 8,9,10    
-        # left -> range(page -3 , page) 　[current 左邊兩頁]
-        # right -> range(page , page+2 )  [current 右邊邊兩頁] 
-        left = page_range[(page_number - 3 ) if (page_number - 3 ) > 0 else 0:
-                          (page_number - 1 ) if (page_number - 1 ) > 0 else 0]
+        if page_number == 1 : 
+            # print(page_number , total_pages)
+            right = page_range[page_number : page_number + 3 ]
 
-        right = page_range[page_number : page_number + 2 ]
-
-        # 若 right 串列中有值
-        if right:
-            if right[-1] < total_pages:
-                last = True
             if right[-1] < total_pages -1 :
                 right_has_more = True
-        if left:
+
+            if right[-1] < total_pages :
+                last = True
+            
+        elif page_number == total_pages :
+            left = page_range[(page_number -3) if page_number -3 > 0 else 0 : page_number -1 ]
+
+            if left[0] > 2:
+                left_has_more = True
+            if left[0]>1:
+                first = True
+        
+        else: 
+            left = page_range[page_number -3 if page_number -3 >0 else 0 : page_number -1]
+            right = page_range [page_number : page_number+2] 
+
+            if right[-1] < total_pages  -1 :
+                right_has_more = True
+            if right[-1]  < total_pages :
+                last = True
+            
+            if left[0] > 2 :
+                left_has_more = True
             if left[0] > 1 :
                 first = True
-            if left[0] > 2 : 
-                left_has_more = True
-        
+
+
+
         data = {
             'left' : left,
             'right' : right,
